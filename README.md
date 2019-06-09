@@ -28,12 +28,12 @@ The webapp is then at `http://localhost:8771/app/index.html`.
 
 You can browse the generated REST documentation at `http://localhost:8771/app/doc`.
 
-For example, here is a config example for
+For example, here is a config snippet for
 [mpdscribble](https://github.com/MusicPlayerDaemon/mpdscribble):
 
 ```
 [mpdscribble]
-## The connection to MPDscribble
+## The connection to MPD
 host = 192.168.100.12
 port = 6600
 
