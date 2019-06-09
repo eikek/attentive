@@ -1,0 +1,40 @@
+/* Attentive CSS */
+
+body {
+    background: #fff;
+}
+
+.invisible {
+    display: none !important;
+}
+
+.default-layout .main-content {
+    margin-top: 50px;
+    padding-top: 15px;
+}
+
+.track-item {
+    font-size: 1.1em;
+}
+
+.track-item.album {
+    font-style: italic;
+}
+
+.track-item.title {
+    font-weight: bold;
+}
+
+.track-item-fill {
+    color: rgba(0,0,0,.6)
+}
+
+@media (min-height: 320px) {
+  .default-layout .ui.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: x-small;
+  }
+}

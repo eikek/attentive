@@ -1,0 +1,314 @@
+openapi: 3.0.0
+
+info:
+  title: Attentive
+  version: 0.1.0-SNAPSHOT
+
+servers:
+  - url: /api/v1
+    description: Current host
+
+paths:
+  /account/register:
+    post:
+      summary: Register a new account
+      description: |
+        Register a new account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+      responses:
+        200:
+          description: OK
+  /account/newinvite:
+    post:
+      summary: Generate a new invitation key.
+      description: |
+        Generate a new invitation. This can be used to register new
+        accounts.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitePassword'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+  /account/exists/{name}:
+    get:
+      summary: Check if an account exists.
+      parameters:
+        - $ref: '#/components/parameters/accountName'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountExists'
+  /stats/basic:
+    get:
+      summary: Get basic statistics.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicStats'
+  /auth/login:
+    post:
+      summary: Login with username and password
+      description: |
+        Sign in with username/password pair and get a Cookie back.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPass"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+  /auth/session:
+    post:
+      summary: Login with an authenticator
+      description: |
+        Login with either a authentication cookie or header.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+  /auth/logout:
+    get:
+      summary: Logout.
+      description: |
+        Logs out by removing the cookie.
+      responses:
+        200:
+          description: OK
+
+  /user/nowplaying:
+    get:
+      summary: Get the current playing track
+      description: |
+        Returns the currently playing track for the current user.
+
+        This request is authenticated using an authenticator. A
+        explicit login is required prior to this.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+  /user/recenttracks:
+    get:
+      summary: Get last N tracks recently listened to
+      description: |
+        Find the last N recently listened tracks by current user. If
+        no limit parameter is given, it defaults to 50. The server may
+        chose a maximum limit, discarding the paremeter (if it is too
+        high, usually 100 is maximum).
+      parameters:
+        - $ref: "#/components/parameters/limit"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecentTracks"
+  /user/stats:
+    get:
+      summary: Basic stats for the current user
+      description: |
+        Return some numbers for the current user.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicStats'
+
+components:
+  parameters:
+    limit:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        format: int32
+    accountName:
+      in: path
+      name: name
+      required: true
+      schema:
+        type: string
+  schemas:
+    Registration:
+      description: Information for registering a new account.
+      required:
+        - name
+        - password
+      properties:
+        name:
+          description: The account name.
+          type: string
+        password:
+          description: The plaintext password.
+          type: string
+        invitation:
+          description: The invitation key, if applicable.
+          type: string
+    InvitePassword:
+      description: A password for generating invitations
+      required:
+        - password
+      properties:
+        password:
+          description: The password.
+          type: string
+    Invitation:
+      description: An new invitation key.
+      required:
+        - key
+        - validMs
+      properties:
+        key:
+          description: The invitation key.
+          type: string
+        validMs:
+          description: How long this key is valid in milliseconds.
+          type: integer
+          format: int64
+    Failure:
+      description: A failure.
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    AccountExists:
+      description: Information abount an account existance.
+      required:
+        - name
+        - exists
+      properties:
+        name:
+          description: The account name.
+          type: string
+        exists:
+          description: If `true`, the account exists.
+          type: boolean
+    BasicStats:
+      description: |
+        Basic statistics of the scrobbled data.
+      required:
+        - accounts
+        - submissions
+        - artists
+        - albums
+      properties:
+        accounts:
+          description: The number of registered accounts.
+          type: integer
+          format: int32
+        submissions:
+          description: The number of scrobbled songs.
+          type: integer
+          format: int64
+        artists:
+          description: The number of scrobbled artists.
+          type: integer
+          format: int64
+        albums:
+          description: The number of scrobbled albums.
+          type: integer
+          format: int64
+    UserPass:
+      description: |
+        Username and password.
+      required:
+        - account
+        - password
+      properties:
+        account:
+          type: string
+        password:
+          type: string
+    LoginResult:
+      description: |
+        The outcome of an authentication request.
+      required:
+        - account
+        - success
+        - message
+      properties:
+        account:
+          type: string
+        success:
+          type: boolean
+        message:
+          type: string
+        authenticator:
+          type: string
+    Track:
+      description: |
+        Information about a single track.
+      required:
+        - title
+        - track
+        - artist
+        - album
+        - length
+        - created
+        - createdMillis
+      properties:
+        title:
+          type: string
+        track:
+          type: integer
+          format: int32
+        artist:
+          type: string
+        album:
+          type: string
+        length:
+          type: integer
+          format: int32
+        created:
+          type: string
+          format: date-time
+        createdMillis:
+          type: integer
+          format: int64
+    RecentTracks:
+      description: |
+        A list of tracks.
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Track"
