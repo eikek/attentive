@@ -8,7 +8,7 @@ object Dependencies {
   val CatsEffectVersion = "1.3.0"
   val CirceVersion = "0.11.1"
   val DoobieVersion = "0.7.0"
-  val FastparseVersion = "2.1.2"
+  val FastparseVersion = "2.1.3"
   val FlywayVersion = "5.2.4"
   val Fs2Version = "1.0.4"
   val H2Version = "1.4.199"
@@ -52,7 +52,7 @@ object Dependencies {
   )
 
   val fastparse = Seq(
-    "com.lihaoyi" %% "fastparse" % "2.1.2"
+    "com.lihaoyi" %% "fastparse" % FastparseVersion
   )
 
   // https://github.com/h2database/h2database
@@ -95,7 +95,7 @@ object Dependencies {
   )
 
   val webjars = Seq(
-    "swagger-ui" -> "3.22.1",
+    "swagger-ui" -> "3.22.2",
     "Semantic-UI" -> "2.4.1",
     "jquery" -> "3.4.1",
     "highlightjs" -> "9.8.0"
