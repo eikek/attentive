@@ -2,28 +2,28 @@ import sbt._
 
 object Dependencies {
 
-  val BetterMonadicForVersion = "0.3.0"
+  val BetterMonadicForVersion = "0.3.1"
   val BouncycastleVersion = "1.61"
   val CatsVersion = "1.6.0"
   val CatsEffectVersion = "1.3.0"
-  val CirceVersion = "0.11.1"
-  val DoobieVersion = "0.7.0"
+  val CirceVersion = "0.11.2"
+  val DoobieVersion = "0.7.1"
   val FastparseVersion = "2.1.3"
-  val FlywayVersion = "5.2.4"
+  val FlywayVersion = "6.4.2"
   val Fs2Version = "1.0.4"
-  val H2Version = "1.4.199"
-  val Http4sVersion = "0.20.1"
+  val H2Version = "1.4.200"
+  val Http4sVersion = "0.20.23"
   val KindProjectorVersion = "0.9.10"
   val Log4sVersion = "1.7.0"
   val LogbackVersion = "1.2.3"
   val MinaSshdVersion = "2.2.0"
   val MiniTestVersion = "2.4.0"
-  val PureConfigVersion = "0.11.0"
-  val SqliteVersion = "3.27.2.1"
+  val PureConfigVersion = "0.11.1"
+  val SqliteVersion = "3.31.1"
   val TikaVersion = "1.20"
   val javaxMailVersion = "1.6.2"
   val dnsJavaVersion = "2.1.9"
-  val YamuscaVersion = "0.5.1"
+  val YamuscaVersion = "0.6.2"
 
   val http4s = Seq(
     "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
@@ -61,10 +61,10 @@ object Dependencies {
     "com.h2database" % "h2" % H2Version
   )
   val mariadb = Seq(
-    "org.mariadb.jdbc" % "mariadb-java-client" % "2.3.0" //flyway doesn't work with newer mariadb
+    "org.mariadb.jdbc" % "mariadb-java-client" % "2.6.0"
   )
   val postgres = Seq(
-    "org.postgresql" % "postgresql" % "42.2.5"
+    "org.postgresql" % "postgresql" % "42.2.12"
   )
   val sqlite = Seq(
     "org.xerial" % "sqlite-jdbc" % SqliteVersion
@@ -95,10 +95,10 @@ object Dependencies {
   )
 
   val webjars = Seq(
-    "swagger-ui" -> "3.22.2",
+    "swagger-ui" -> "3.25.3",
     "Semantic-UI" -> "2.4.1",
-    "jquery" -> "3.4.1",
-    "highlightjs" -> "9.8.0"
+    "jquery" -> "3.5.1",
+    "highlightjs" -> "9.15.10"
   ).map({case (a, v) => "org.webjars" % a % v })
 
   val testing = Seq(
