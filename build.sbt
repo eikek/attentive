@@ -2,6 +2,8 @@ import com.github.eikek.sbt.openapi._
 import scala.sys.process._
 import com.typesafe.sbt.SbtGit.GitKeys._
 
+val elmCompileMode = settingKey[ElmCompileMode]("How to compile elm sources")
+
 val sharedSettings = Seq(
   organization := "com.github.eikek",
   version := "0.2.0-SNAPSHOT",
@@ -31,12 +33,14 @@ val testSettings = Seq(
 )
 
 val elmSettings = Seq(
+  elmCompileMode := ElmCompileMode.Debug,
   Compile/resourceGenerators += (Def.task {
     compileElm(streams.value.log
       , (Compile/baseDirectory).value
       , (Compile/resourceManaged).value
       , name.value
-      , version.value)
+      , version.value
+      , elmCompileMode.value)
   }).taskValue,
   watchSources += Watched.WatchSource(
     (Compile/sourceDirectory).value/"elm"
@@ -139,10 +143,11 @@ def copyWebjarResources(src: Seq[File], base: File, artifact: String, version: S
   }
 }
 
-def compileElm(logger: Logger, wd: File, outBase: File, artifact: String, version: String): Seq[File] = {
+def compileElm(logger: Logger, wd: File, outBase: File, artifact: String, version: String, mode: ElmCompileMode): Seq[File] = {
   logger.info("Compile elm files ...")
   val target = outBase/"META-INF"/"resources"/"webjars"/artifact/version/"attentive-app.js"
-  val proc = Process(Seq("elm", "make", "--output", target.toString) ++ Seq(wd/"src"/"main"/"elm"/"Main.elm").map(_.toString), Some(wd))
+  val cmd = Seq("elm", "make") ++ mode.flags ++ Seq("--output", target.toString)
+  val proc = Process(cmd ++ Seq(wd/"src"/"main"/"elm"/"Main.elm").map(_.toString), Some(wd))
   val out = proc.!!
   logger.info(out)
   Seq(target)
@@ -160,3 +165,8 @@ def createWebjarSource(wj: Seq[ModuleID], out: File): Seq[File] = {
   IO.write(target, content)
   Seq(target)
 }
+
+addCommandAlias("make", ";set root/elmCompileMode := ElmCompileMode.Production ;root/openapiCodegen ;root/test:compile")
+addCommandAlias("make-zip", ";root/universal:packageBin")
+addCommandAlias("make-deb", ";root/debian:packageBin")
+addCommandAlias("make-pkg", ";clean ;make ;make-zip ;make-deb")
