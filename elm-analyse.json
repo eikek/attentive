@@ -1,0 +1,8 @@
+{
+    "excludedPaths": [
+        "target/elm-src/"
+    ],
+    "checks" : {
+        "ImportAll": false
+    }
+}
