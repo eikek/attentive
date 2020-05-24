@@ -37,7 +37,7 @@ object AttentiveServer {
 
 
     Stream.resource(app).flatMap(httpApp =>
-      BlazeServerBuilder[F]
+      BlazeServerBuilder[F](ExecutionContext.global)
         .bindHttp(cfg.bind.port, cfg.bind.host)
         .withHttpApp(httpApp)
         .serve
