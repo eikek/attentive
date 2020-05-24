@@ -54,10 +54,11 @@ The build tool is [sbt](https://scala-sbt.org). Java 8 end Elm 0.19
 are required. Then build it with this command:
 
 ```
-sbt universal:packageBin
+sbt make-pkg
 ```
 
-This creates a ZIP file in the `target/universal` folder.
+This creates a `.deb` file in `target/` and a `.zip` file in
+`target/universal` folder.
 
 ## Configuration
 
